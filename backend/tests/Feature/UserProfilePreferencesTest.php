@@ -114,6 +114,62 @@ class UserProfilePreferencesTest extends TestCase
         ])->assertUnprocessable();
     }
 
+    public function test_notification_type_preferences_default_and_round_trip(): void
+    {
+        $user = User::factory()->create(['role' => 'staff']);
+
+        $this->actingAs($user, 'sanctum')
+            ->getJson('/api/auth/preferences')
+            ->assertOk()
+            ->assertJsonPath('types.assigned.email', true)
+            ->assertJsonPath('types.assigned.in_app', true)
+            ->assertJsonPath('types.comment.email', false)
+            ->assertJsonPath('types.comment.in_app', true)
+            ->assertJsonPath('types.reminder.email', true)
+            ->assertJsonPath('reminder_send_time', '08:00');
+
+        $this->putJson('/api/auth/preferences', [
+            'notify_email' => true,
+            'notify_push' => false,
+            'digest_time' => null,
+            'types' => [
+                'assigned' => ['email' => false, 'in_app' => true],
+                'comment' => ['email' => true],
+                'unrecognized' => ['email' => false],
+            ],
+        ])->assertOk()
+            ->assertJsonPath('types.assigned.email', false)
+            ->assertJsonPath('types.assigned.in_app', true)
+            ->assertJsonPath('types.comment.email', true)
+            ->assertJsonPath('types.comment.in_app', true);
+
+        $this->assertDatabaseHas('user_notification_preferences', [
+            'user_id' => $user->id,
+            'type' => 'assigned',
+            'email' => false,
+            'in_app' => true,
+        ]);
+        $this->assertDatabaseMissing('user_notification_preferences', [
+            'user_id' => $user->id,
+            'type' => 'unrecognized',
+        ]);
+    }
+
+    public function test_known_type_preferences_require_boolean_values(): void
+    {
+        $user = User::factory()->create(['role' => 'staff']);
+
+        $this->actingAs($user, 'sanctum')
+            ->putJson('/api/auth/preferences', [
+                'notify_email' => true,
+                'notify_push' => true,
+                'digest_time' => null,
+                'types' => ['reminder' => ['email' => 'enabled']],
+            ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('types.reminder.email');
+    }
+
     public function test_first_time_password_set_does_not_require_the_current_password(): void
     {
         $user = User::factory()->create(['must_change_password' => true]);

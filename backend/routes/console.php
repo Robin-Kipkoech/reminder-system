@@ -12,3 +12,5 @@ Artisan::command('inspire', function () {
 Schedule::call(function (): void {
     PasswordResetOtp::query()->where('created_at', '<', now()->subDay())->delete();
 })->daily()->name('password-reset-otps:cleanup');
+
+Schedule::command('reminders:send')->everyFiveMinutes()->withoutOverlapping();

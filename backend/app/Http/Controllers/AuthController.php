@@ -92,19 +92,55 @@ class AuthController extends Controller
 
     public function updatePreferences(Request $request): JsonResponse
     {
-        $validated = $request->validate([
+        $types = ['assigned', 'mention', 'comment', 'completed', 'reminder'];
+        $rules = [
             'notify_email' => ['required', 'boolean'],
             'notify_push' => ['required', 'boolean'],
             'digest_time' => ['nullable', 'date_format:H:i'],
-        ]);
+            'types' => ['sometimes', 'array'],
+        ];
+        foreach ($types as $type) {
+            $rules["types.{$type}"] = ['sometimes', 'array'];
+            $rules["types.{$type}.email"] = ['sometimes', 'boolean'];
+            $rules["types.{$type}.in_app"] = ['sometimes', 'boolean'];
+        }
+        $validated = $request->validate($rules);
         $user = $request->user();
         $old = $this->preferenceValues($user);
 
-        $user->fill($validated)->save();
-        $new = $this->preferenceValues($user->refresh());
-        $this->auditChange($request, $user, 'preferences-updated', $old, $new);
+        DB::transaction(function () use ($validated, $user, $request, $types, $old): void {
+            $user->fill([
+                'notify_email' => $validated['notify_email'],
+                'notify_push' => $validated['notify_push'],
+                'digest_time' => array_key_exists('digest_time', $validated)
+                    ? $validated['digest_time']
+                    : $user->digest_time,
+            ])->save();
 
-        return response()->json($new);
+            foreach ($types as $type) {
+                if (! isset($validated['types'][$type])) {
+                    continue;
+                }
+
+                $current = DB::table('user_notification_preferences')
+                    ->where('user_id', $user->getKey())
+                    ->where('type', $type)
+                    ->first();
+                $defaults = $this->typePreferenceValues($type);
+                DB::table('user_notification_preferences')->upsert([[
+                    'user_id' => $user->getKey(),
+                    'type' => $type,
+                    'email' => $validated['types'][$type]['email'] ?? ($current ? (bool) $current->email : $defaults['email']),
+                    'in_app' => $validated['types'][$type]['in_app'] ?? ($current ? (bool) $current->in_app : $defaults['in_app']),
+                    'created_at' => $current?->created_at ?? now(),
+                    'updated_at' => now(),
+                ]], ['user_id', 'type'], ['email', 'in_app', 'updated_at']);
+            }
+
+            $this->auditChange($request, $user, 'preferences-updated', $old, $this->preferenceValues($user->refresh()));
+        });
+
+        return response()->json($this->preferenceValues($user->refresh()));
     }
 
     public function changePassword(Request $request): UserResource
@@ -182,11 +218,32 @@ class AuthController extends Controller
 
     private function preferenceValues($user): array
     {
+        $savedTypes = DB::table('user_notification_preferences')
+            ->where('user_id', $user->getKey())
+            ->get()
+            ->keyBy('type');
+        $types = [];
+        foreach (['assigned', 'mention', 'comment', 'completed', 'reminder'] as $type) {
+            $default = $this->typePreferenceValues($type);
+            $saved = $savedTypes->get($type);
+            $types[$type] = [
+                'email' => $saved === null ? $default['email'] : (bool) $saved->email,
+                'in_app' => $saved === null ? $default['in_app'] : (bool) $saved->in_app,
+            ];
+        }
+
         return [
             'notify_email' => (bool) $user->notify_email,
             'notify_push' => (bool) $user->notify_push,
             'digest_time' => $user->digest_time === null ? null : substr((string) $user->digest_time, 0, 5),
+            'reminder_send_time' => substr((string) (DB::table('email_settings')->value('reminder_send_time') ?? '08:00:00'), 0, 5),
+            'types' => $types,
         ];
+    }
+
+    private function typePreferenceValues(string $type): array
+    {
+        return ['email' => $type !== 'comment', 'in_app' => true];
     }
 
     private function auditChange(Request $request, $user, string $action, array $old, array $new): void

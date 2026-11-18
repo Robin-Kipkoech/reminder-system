@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminEmailSettingsController;
 use App\Http\Controllers\Auth\ResetPasswordOtpController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientOverviewController;
@@ -118,6 +119,11 @@ Route::middleware(['auth:sanctum', EnsureUserIsActive::class])->group(function (
 
         // Master data writes: admin only.
         Route::middleware('role:admin')->group(function (): void {
+            Route::get('/admin/email-settings', [AdminEmailSettingsController::class, 'show']);
+            Route::put('/admin/email-settings', [AdminEmailSettingsController::class, 'update']);
+            Route::post('/admin/email-settings/test', [AdminEmailSettingsController::class, 'test']);
+            Route::get('/admin/email-settings/logs', [AdminEmailSettingsController::class, 'logs']);
+
             Route::post('/clients', [ClientController::class, 'store']);
             Route::put('/clients/{client}', [ClientController::class, 'update']);
             Route::post('/clients/{client}/activate', [ClientController::class, 'activate']);

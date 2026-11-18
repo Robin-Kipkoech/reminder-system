@@ -1,0 +1,25 @@
+.fp-card {
+  width: min(440px, 100%); display: grid; gap: 20px; padding: 36px 32px;
+  background: var(--surface); border-radius: 16px; box-shadow: 0 20px 50px rgba(15, 23, 42, .12);
+}
+.fp-logo { height: 72px; width: auto; justify-self: start; }
+.fp-step { margin: 0; font-size: 0.75rem; font-weight: 700; letter-spacing: .08em; color: var(--brand); }
+.fp-heading { display: grid; gap: 8px; }
+.fp-heading h1, .fp-done h1 { font-size: 1.5rem; }
+.fp-muted { color: var(--muted); line-height: 1.5; margin: 0; }
+.fp-notice { background: var(--brand-soft); color: var(--brand-dark); border-radius: var(--radius); padding: 10px 14px; font-size: 0.9rem; }
+
+.fp-otp .field-input { font-size: 1.6rem; letter-spacing: .5em; text-align: center; font-variant-numeric: tabular-nums; padding-left: calc(14px + .5em); }
+.fp-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.fp-link { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; color: var(--brand); cursor: pointer; }
+.fp-link:hover:not(:disabled) { text-decoration: underline; }
+.fp-link:disabled { color: var(--muted); cursor: default; }
+.fp-center { text-align: center; }
+
+.fp-done { display: grid; justify-items: center; gap: 12px; text-align: center; color: var(--brand); }
+.fp-done h1 { color: var(--text); }
+.fp-button-link { width: 100%; text-decoration: none; margin-top: 8px; }
+
+@media (max-width: 480px) {
+  .fp-card { padding: 28px 20px; }
+}

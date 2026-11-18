@@ -1,0 +1,109 @@
+/* ---------- Page layout ---------- */
+.md-page { display: grid; gap: 20px; padding: 28px; max-width: 1200px; }
+.md-page-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.md-page-header h1 { font-size: 1.6rem; }
+.md-page-header p { color: var(--muted); margin-top: 4px; }
+
+/* ---------- Buttons ---------- */
+.login-button.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.login-button.btn-secondary:hover:not(:disabled) { background: var(--page); }
+.login-button.btn-danger { background: var(--danger); }
+.login-button.btn-danger:hover:not(:disabled) { background: #991b1b; }
+.md-icon-btn {
+    display: inline-grid; place-items: center; width: 34px; height: 34px;
+    background: transparent; border: 1px solid transparent; border-radius: 8px;
+    color: var(--muted); cursor: pointer;
+}
+.md-icon-btn:hover { background: var(--page); color: var(--text); }
+.md-icon-danger:hover { background: var(--danger-soft); color: var(--danger); }
+
+/* ---------- Toolbar ---------- */
+.md-toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.md-search {
+    display: flex; align-items: center; gap: 8px; flex: 1 1 240px; max-width: 360px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0 12px;
+}
+.md-search:focus-within { border-color: var(--brand); }
+.md-search input { flex: 1; border: 0; background: transparent; padding: 10px 0; font: inherit; color: inherit; }
+.md-search input:focus { outline: none; }
+.md-select {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 10px 12px; font: inherit; color: inherit;
+}
+
+/* ---------- Table ---------- */
+.md-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.md-table th, .md-table td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.md-table tbody tr:last-child td { border-bottom: 0; }
+.md-table th { font-size: 0.8125rem; color: var(--muted); font-weight: 700; background: var(--page); }
+.md-sort { display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 0; font: inherit; color: inherit; font-weight: 700; cursor: pointer; }
+.md-row-actions { white-space: nowrap; text-align: right; }
+
+.md-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+.md-badge.active { background: #dcfce7; color: #166534; }
+.md-badge.inactive { background: #fef3c7; color: #92400e; }
+.md-badge.deleted { background: #e5e7eb; color: #374151; }
+
+.md-pagination { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 0.9rem; }
+.md-pagination > div { display: flex; gap: 8px; }
+
+/* ---------- States ---------- */
+.md-state { display: grid; justify-items: center; gap: 12px; padding: 48px 16px; color: var(--muted); background: var(--surface); border: 1px dashed var(--border); border-radius: 12px; }
+.md-skeletons { display: grid; gap: 10px; }
+.md-skeleton { height: 48px; border-radius: 10px; background: linear-gradient(90deg, #eceff4 25%, #f6f8fb 50%, #eceff4 75%); background-size: 200% 100%; animation: md-shimmer 1.2s infinite; }
+@keyframes md-shimmer { to { background-position: -200% 0; } }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Modal ---------- */
+.md-modal { border: 0; border-radius: 16px; padding: 0; width: min(520px, calc(100% - 32px)); box-shadow: 0 24px 60px rgba(15, 23, 42, .3); color: var(--text); }
+.md-modal-sm { width: min(420px, calc(100% - 32px)); }
+.md-modal::backdrop { background: rgba(15, 23, 42, .5); }
+.md-modal-body { display: grid; gap: 18px; padding: 24px; }
+.md-modal-header { display: flex; justify-content: space-between; align-items: center; }
+.md-modal-header h2 { font-size: 1.2rem; }
+.md-form { display: grid; gap: 16px; }
+.md-actions { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+.md-confirm-text { color: var(--muted); line-height: 1.5; }
+.field-input { resize: vertical; }
+
+/* ---------- Toasts ---------- */
+.md-toasts { position: fixed; right: 16px; bottom: 16px; display: grid; gap: 10px; z-index: 100; max-width: min(380px, calc(100% - 32px)); }
+.md-toast { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(15, 23, 42, .15); font-size: 0.9rem; }
+.md-toast-success { border-left: 4px solid #16a34a; }
+.md-toast-error { border-left: 4px solid var(--danger); }
+
+/* ---------- Shell: logo, nav, drawer ---------- */
+.sidebar-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.sidebar-logo-frame { display: inline-block; background: #fff; padding: 8px 12px; border-radius: 10px; }
+.sidebar-logo-frame img { display: block; height: 60px; width: auto; }
+.topbar-logo { display: block; height: 60px; width: auto; }
+.nav-link.active { background: color-mix(in srgb, var(--brand) 16%, transparent); font-weight: 700; }
+.drawer-close { display: none; background: none; border: 0; color: inherit; cursor: pointer; }
+.drawer-backdrop { display: none; }
+
+/* Change 900px to the breakpoint where your App.css hides the sidebar
+   and shows .mobile-topbar. */
+@media (max-width: 900px) {
+    .app-shell > .sidebar {
+        display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0;
+        width: 280px; max-width: 85vw; z-index: 60; overflow-y: auto;
+        transform: translateX(-100%); transition: transform .2s ease;
+    }
+    .app-shell > .sidebar.open { transform: translateX(0); }
+    .drawer-close { display: inline-grid; }
+    .drawer-backdrop { display: block; position: fixed; inset: 0; background: rgba(15, 23, 42, .5); z-index: 55; }
+    .mobile-topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .md-page { padding: 16px; }
+}
+
+/* ---------- Table becomes cards on phones ---------- */
+@media (max-width: 760px) {
+    .md-table, .md-table tbody, .md-table tr, .md-table td { display: block; }
+    .md-table { border: 0; background: transparent; }
+    .md-table thead { display: none; }
+    .md-table tr { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; margin-bottom: 12px; }
+    .md-table td { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border: 0; text-align: right; }
+    .md-table td::before { content: attr(data-label); color: var(--muted); font-weight: 700; text-align: left; }
+    .md-row-actions { justify-content: flex-end; }
+    .md-row-actions::before { content: none; }
+}

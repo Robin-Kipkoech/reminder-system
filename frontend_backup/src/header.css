@@ -1,0 +1,72 @@
+/* ---------- Header (sits above the page, beside the sidebar) ---------- */
+.top-header {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  height: 66px; padding: 0 28px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(15, 23, 42, .05);
+}
+.th-left { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+.th-logo { display: none; flex: none; }
+.th-logo img { display: block; height: 30px; width: auto; }
+.top-header .qa-search { flex: 1; min-width: 0; max-width: 440px; }
+
+.th-actions { display: flex; align-items: center; gap: 12px; flex: none; }
+.th-support {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
+  border: 1px solid var(--border); border-radius: 999px;
+  font-size: 0.9rem; font-weight: 600; color: var(--text); text-decoration: none;
+}
+.th-support:hover { border-color: var(--brand); color: var(--brand); }
+
+.th-burger {
+  display: none; place-items: center; width: 42px; height: 42px; flex: none;
+  border: 1px solid var(--border); border-radius: 10px; background: var(--surface);
+  color: var(--text); cursor: pointer;
+}
+
+/* ---------- User menu ---------- */
+.th-menu-wrap { position: relative; }
+.th-user-button {
+  display: inline-flex; align-items: center; gap: 10px; padding: 4px 10px 4px 4px;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--surface);
+  font: inherit; color: var(--text); cursor: pointer;
+}
+.th-user-button:hover { border-color: var(--brand); }
+.th-user-copy { display: grid; text-align: left; line-height: 1.2; }
+.th-user-copy small { color: var(--muted); text-transform: capitalize; }
+.th-menu {
+  position: absolute; right: 0; top: calc(100% + 10px); z-index: 70; min-width: 230px; padding: 6px;
+  display: grid; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; box-shadow: 0 16px 40px rgba(15, 23, 42, .18);
+}
+.th-menu a, .th-menu button {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 0; border-radius: 8px;
+  background: none; font: inherit; color: var(--text); text-decoration: none; text-align: left; cursor: pointer;
+}
+.th-menu a:hover, .th-menu button:hover, .th-menu a:focus-visible, .th-menu button:focus-visible { background: var(--brand-soft); }
+.th-menu-head { display: grid; gap: 2px; padding: 10px 12px 12px; margin-bottom: 4px; border-bottom: 1px solid var(--border); }
+.th-menu-head small { color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- Responsive ---------- */
+/* 900px must match the breakpoint where your App.css hides the sidebar. */
+@media (max-width: 1200px) {
+  .th-support, .th-user-copy { display: none; }
+}
+@media (max-width: 900px) {
+  .top-header { padding: 0 14px; height: 62px; gap: 10px; }
+  .th-burger { display: grid; }
+  .th-logo { display: inline-flex; }
+  .top-header .qa-search {
+    flex: none; min-width: 0; width: 40px; height: 40px; padding: 0;
+    justify-content: center; border-radius: 50%; margin-left: auto;
+  }
+  .top-header .qa-search-text, .top-header .qa-kbd { display: none; }
+  .th-actions { gap: 8px; }
+}
+@media (max-width: 560px) {
+  .th-user-button { padding: 3px; }
+  .th-user-button svg { display: none; }
+  .top-header .nt-panel { position: fixed; left: 12px; right: 12px; top: 68px; width: auto; }
+}
